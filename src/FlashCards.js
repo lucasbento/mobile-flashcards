@@ -3,6 +3,11 @@ import { AsyncStorage, View, Text, StyleSheet } from 'react-native';
 import { Font } from 'expo';
 import { persistStore } from 'redux-persist';
 
+import {
+  requestNotificationPermission,
+  scheduleLocalNotification,
+} from './notifications';
+
 import Router from './Router';
 import store from './store';
 
@@ -15,9 +20,18 @@ class FlashCards extends PureComponent {
   };
 
   componentDidMount() {
+    this.requestNotificationPermission();
     this.handleLoadFonts();
     this.handlePersistStore();
   }
+
+  requestNotificationPermission = () => {
+    const permissionGranted = requestNotificationPermission();
+
+    if (permissionGranted) {
+      return scheduleLocalNotification();
+    }
+  };
 
   handleLoadFonts = async () => {
     await Font.loadAsync({
