@@ -12,12 +12,14 @@ const initialState = {
 
 export const TYPES = {
   SET_CHOSEN_DECK: 'SET_CHOSEN_DECK',
+  CLEAR_QUIZ: 'CLEAR_QUIZ',
   RESTART_QUIZ: 'RESTART_QUIZ',
   ANSWER_QUESTION: 'ANSWER_QUESTION',
   CALCULATE_STATS: 'CALCULATE_STATS',
 };
 
 export const setChosenDeck = createAction(TYPES.SET_CHOSEN_DECK);
+export const clearQuiz = createAction(TYPES.CLEAR_QUIZ);
 export const restartQuiz = createAction(TYPES.RESTART_QUIZ);
 
 export const answerQuestion = createAction(TYPES.ANSWER_QUESTION);
@@ -31,6 +33,8 @@ export default handleActions(
       chosenDeck,
       currentQuestionIndex: 0,
     }),
+
+    [TYPES.CLEAR_QUIZ]: state => initialState,
 
     [TYPES.RESTART_QUIZ]: state => ({
       ...initialState,

@@ -2,17 +2,42 @@ import React, { PureComponent } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 
-import { calculateStats, restartQuiz } from '../../modules/quiz';
+import {
+  clearLocalNotifications,
+  scheduleLocalNotification,
+} from '../../notifications';
+
+import {
+  calculateStats,
+  restartQuiz,
+  clearQuiz,
+} from '../../modules/quiz';
 
 import { Text, Button, Loading } from '../../components/common';
 
 class FinishedQuiz extends PureComponent {
+  state = {
+    isRestartingQuiz: false,
+  };
+
   static navigationOptions = {
     headerTitle: 'Finished Quiz',
   };
 
   componentWillMount() {
     this.props.actions.calculateStats();
+
+    // Remove any local notification
+    clearLocalNotifications();
+
+    // and schedule new one for tomorrow
+    scheduleLocalNotification();
+  }
+
+  componentWillUnmount() {
+    if (!this.state.isRestartingQuiz) {
+      return this.props.actions.clearQuiz();
+    }
   }
 
   handleGoBackToDeck = () =>
@@ -20,11 +45,14 @@ class FinishedQuiz extends PureComponent {
       this.props.navigation.state.params.deckDetailRouteKey,
     );
 
-  handleRestartQuiz = () => {
-    this.props.actions.restartQuiz();
-
-    this.props.navigation.goBack();
-  };
+  handleRestartQuiz = () =>
+    this.setState({
+      isRestartingQuiz: true,
+    }, () => {
+      this.props.actions.restartQuiz();
+      
+      this.props.navigation.goBack();
+    });
 
   render() {
     const { isLoading, score } = this.props.quiz.stats;
@@ -91,6 +119,7 @@ const mapDispatchToProps = dispatch => ({
   actions: {
     calculateStats: () => dispatch(calculateStats()),
     restartQuiz: () => dispatch(restartQuiz()),
+    clearQuiz: () => dispatch(clearQuiz()),
   },
 });
 
