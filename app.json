@@ -1,5 +1,7 @@
 {
   "expo": {
-    "sdkVersion": "22.0.0"
+    "sdkVersion": "22.0.0",
+    "slug": "mobile-flashcards",
+    "name": "mobile-flashcards"
   }
 }
