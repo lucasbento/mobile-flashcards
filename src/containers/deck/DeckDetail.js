@@ -70,6 +70,7 @@ class DeckDetail extends PureComponent {
           <Button
             label="Start quiz"
             onPress={this.handleGoToQuiz}
+            disabled={!questions.length}
           />
         </View>
       </View>
